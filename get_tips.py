@@ -76,12 +76,14 @@ def main():
     if len(sys.argv) != 2:
         return
     search_criteria_dict = sys.argv[1]
+
+    # 辞書として検索条件を読み出す
     with open(search_criteria_dict, 'r') as f:
         search_criteria_dict = json.load(f)
 
     for search_criteria_name in search_criteria_dict:
-        keyword = random.choice(search_criteria_dict[search_criteria_name])
 
+        keyword = random.choice(search_criteria_dict[search_criteria_name])
         # venue_idの取得
         tips_num_lower_limit = 10
         venue_ids = get_venue_id(keyword,RADIUS,tips_num_lower_limit)
