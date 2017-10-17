@@ -1,3 +1,4 @@
+import sys
 import json
 import random
 import requests
@@ -69,9 +70,11 @@ def save_tips_json(tips, path):
     with open(path, "w") as fh:
         fh.write(tips_json)
 
-
 def main():
-    with open("foodie_city.json", 'r') as f:
+    if len(sys.argv) != 2:
+        return
+    search_criteria_dict = sys.argv[1]
+    with open(search_criteria_dict, 'r') as f:
         foodie_city_keyword = json.load(f)
     for city in foodie_city_keyword:
         keyword = random.choice(foodie_city_keyword[city])
