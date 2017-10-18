@@ -4,7 +4,6 @@ import random
 import requests
 
 VERSION = '20170801'
-RADIUS = '800'
 
 def get_venue_id(search_parameters, tips_num_lower_limit):
     # foursquareのAPIを叩いて指定した条件でvenueIDをとってくる
