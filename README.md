@@ -7,7 +7,6 @@ foursquareから任意の条件でtipsを取得する
 1. get_tips.pyがあるディレクトリに移動する
 
 2. clientIDとclientSecretIDを保存するファイルid.jsonの作成  
-はじめに  
 `touch token.json`  
 で、get_tips.pyと同じディレクトリにtoken.jsonファイルを作成する  
 作成したjsonファイル内にclientIDやclient secretIDを  
@@ -18,7 +17,7 @@ foursquareから任意の条件でtipsを取得する
 みたいな感じで書く  
 
 3. 検索パラメータの指定    
-`touch example_params.json`
+`touch example_params.json`  
 みたいな感じに適当な名前で適当な場所にjsonファイルを作成する  
 作成したjsonファイルに   
 `{
