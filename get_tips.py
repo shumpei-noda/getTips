@@ -8,18 +8,18 @@ CLIENT_SEACRET = 'CV5QHUMNXUFGFDSRNJ4STH3KBV5G0IVQNKTMXDQTTC23AEY2'
 VERSION = '20170801'
 RADIUS = '800'
 
-def get_venue_id(keyword, radius, tips_num_lower_limit):
+def get_venue_id(search_parameters, tips_num_lower_limit):
     # foursquareのAPIを叩いて指定した条件でvenueIDをとってくる
     search_for_venue_url = 'https://api.foursquare.com/v2/venues/search'
-    search_for_venue_params = {
+    search_for_venue_parameters = {
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SEACRET,
         'v': VERSION,
-        'near': keyword,
-        'radius': radius,
-        'categoryId': '4d4b7105d754a06374d81259'
     }
-    search_for_venue_response = requests.get(url=search_for_venue_url, params=search_for_venue_params)
+    for search_parameter_key in search_parameters:
+        search_for_venue_parameters[search_parameter_key] = search_parameters[search_parameter_key]
+
+    search_for_venue_response = requests.get(url=search_for_venue_url, params=search_for_venue_parameters)
     venue_data = json.loads(search_for_venue_response.text)['response']['venues']
 
     #下限よりも多くのtipsがあるvenueのIDを抽出
@@ -71,13 +71,13 @@ def save_tips_json(tips, path):
         fh.write(tips_json)
 
 def fill_missing_value(search_parameters):
-    parameters = ['ll','near','intent','radius', 'sw',
+    parameter_keys = ['ll','near','intent','radius', 'sw',
                   'ne', 'query', 'limit', 'categoryId',
                   'llAcc', 'alt', 'altAcc', 'url', 'providerId', 'linkedId']
 
-    for parameter in parameters:
-        if parameter not in search_parameters:
-            search_parameters[parameter] = None
+    for parameter_key in parameter_keys:
+        if parameter_key not in search_parameters:
+            search_parameters[parameter_key] = None
 
     return search_parameters
 
@@ -90,13 +90,13 @@ def main():
     with open(search_parameters_file_name, 'r') as f:
         search_parameters = json.load(f)
 
-    for search_parameters_name in search_parameters:
-        search_parameters[search_parameters_name] = fill_missing_value(search_parameters[search_parameters_name])
-        """
+    for search_name in search_parameters:
+        search_parameters[search_name] = fill_missing_value(search_parameters[search_name])
         # venue_idの取得
         tips_num_lower_limit = 10
-        venue_ids = get_venue_id(keyword,RADIUS,tips_num_lower_limit)
-
+        venue_ids = get_venue_id(search_parameters[search_name],tips_num_lower_limit)
+        print(venue_ids)
+    """
         # 1venueあたりのtips最大取得数
         get_tips_num_upper_limit = '10'
         tips = get_venues_tips(venue_ids,get_tips_num_upper_limit)
@@ -104,6 +104,6 @@ def main():
         # 取得してきたtipsの保存先
         path = 'tips/tips_us/' + search_parameters_name + '_' + keyword + '_tips.json'
         save_tips_json(tips, path)
-        """
+    """
 if __name__ == "__main__":
     main()
