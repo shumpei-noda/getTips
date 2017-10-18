@@ -75,12 +75,12 @@ def main():
     # venue検索条件ファイルの取得
     if len(sys.argv) != 2:
         return
-    search_criteria_dict = sys.argv[1]
-    with open(search_criteria_dict, 'r') as f:
-        search_criteria_dict = json.load(f)
+    search_parameters_file_name = sys.argv[1]
+    with open(search_parameters_file_name, 'r') as f:
+        search_parameters = json.load(f)
 
-    for search_criteria_name in search_criteria_dict:
-        keyword = random.choice(search_criteria_dict[search_criteria_name])
+    for search_parameters_name in search_parameters:
+        keyword = random.choice(search_parameters[search_parameters_name])
 
         # venue_idの取得
         tips_num_lower_limit = 10
@@ -91,7 +91,7 @@ def main():
         tips = get_venues_tips(venue_ids,get_tips_num_upper_limit)
 
         # 取得してきたtipsの保存先
-        path = 'tips/tips_us/' + search_criteria_name + '_' + keyword + '_tips.json'
+        path = 'tips/tips_us/' + search_parameters_name + '_' + keyword + '_tips.json'
         save_tips_json(tips, path)
 if __name__ == "__main__":
     main()
