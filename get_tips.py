@@ -13,7 +13,11 @@ def get_venue_id(search_parameters, tips_num_lower_limit):
         search_for_venue_parameters[search_parameter_key] = search_parameters[search_parameter_key]
 
     search_for_venue_response = requests.get(url=search_for_venue_url, params=search_for_venue_parameters)
-    venue_data = json.loads(search_for_venue_response.text)['response']['venues']
+    venue_data_json = json.loads(search_for_venue_response.text)
+    if 'errorType' in venue_data_json['meta']:
+        print(venue_data_json['meta']['errorDetail'])
+        return
+    venue_data = venue_data_json['response']['venues']
 
     #下限よりも多くのtipsがあるvenueのIDを抽出
     venue_ids = []
@@ -97,7 +101,8 @@ def main():
         # venue_idの取得
         tips_num_lower_limit = 10
         venue_ids = get_venue_id(search_parameters[search_name],tips_num_lower_limit)
-
+        if not venue_ids:
+            continue
         # 取得したvenue_idからtipsを取得
         tips = get_venues_tips(venue_ids, token)
 
