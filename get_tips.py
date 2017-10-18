@@ -8,18 +8,18 @@ CLIENT_SEACRET = 'CV5QHUMNXUFGFDSRNJ4STH3KBV5G0IVQNKTMXDQTTC23AEY2'
 VERSION = '20170801'
 RADIUS = '800'
 
-def get_venue_id(keyword, radius, tips_num_lower_limit):
+def get_venue_id(search_parameters, tips_num_lower_limit):
     # foursquareのAPIを叩いて指定した条件でvenueIDをとってくる
     search_for_venue_url = 'https://api.foursquare.com/v2/venues/search'
-    search_for_venue_params = {
+    search_for_venue_parameters = {
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SEACRET,
         'v': VERSION,
-        'near': keyword,
-        'radius': radius,
-        'categoryId': '4d4b7105d754a06374d81259'
     }
-    search_for_venue_response = requests.get(url=search_for_venue_url, params=search_for_venue_params)
+    for search_parameter_key in search_parameters:
+        search_for_venue_parameters[search_parameter_key] = search_parameters[search_parameter_key]
+
+    search_for_venue_response = requests.get(url=search_for_venue_url, params=search_for_venue_parameters)
     venue_data = json.loads(search_for_venue_response.text)['response']['venues']
 
     #下限よりも多くのtipsがあるvenueのIDを抽出
@@ -30,7 +30,7 @@ def get_venue_id(keyword, radius, tips_num_lower_limit):
 
     return venue_ids
 
-def get_venues_tips(venue_ids, num_upper_limit):
+def get_venues_tips(venue_ids):
     # venueidをと結合するためurlを分ける
     first_get_venues_tips_url = 'https://api.foursquare.com/v2/venues/'
     third_get_venues_tips_url = '/tips'
@@ -46,7 +46,6 @@ def get_venues_tips(venue_ids, num_upper_limit):
             'client_id': CLIENT_ID,
             'client_secret': CLIENT_SEACRET,
             'v': VERSION,
-            'limit': num_upper_limit
         }
         get_venues_tips_response = requests.get(url=get_venues_tips_url, params=get_venues_tips_params)
         venue_tips_data = json.loads(get_venues_tips_response.text)
@@ -70,30 +69,38 @@ def save_tips_json(tips, path):
     with open(path, "w") as fh:
         fh.write(tips_json)
 
+def fill_missing_value(search_parameters):
+    parameter_keys = ['ll','near','intent','radius', 'sw',
+                  'ne', 'query', 'limit', 'categoryId',
+                  'llAcc', 'alt', 'altAcc', 'url', 'providerId', 'linkedId']
+
+    for parameter_key in parameter_keys:
+        if parameter_key not in search_parameters:
+            search_parameters[parameter_key] = None
+
+    return search_parameters
+
 def main():
 
     # venue検索条件ファイルの取得
     if len(sys.argv) != 2:
         return
-    search_criteria_dict = sys.argv[1]
+    
+        search_parameters_file_name = sys.argv[1]
+        with open(search_parameters_file_name, 'r') as f:
+            search_parameters = json.load(f)
 
-    # 辞書として検索条件を読み出す
-    with open(search_criteria_dict, 'r') as f:
-        search_criteria_dict = json.load(f)
-
-    for search_criteria_name in search_criteria_dict:
-
-        keyword = random.choice(search_criteria_dict[search_criteria_name])
+        for search_name in search_parameters:
+            search_parameters[search_name] = fill_missing_value(search_parameters[search_name])
         # venue_idの取得
         tips_num_lower_limit = 10
-        venue_ids = get_venue_id(keyword,RADIUS,tips_num_lower_limit)
+        venue_ids = get_venue_id(search_parameters[search_name],tips_num_lower_limit)
 
-        # 1venueあたりのtips最大取得数
-        get_tips_num_upper_limit = '10'
-        tips = get_venues_tips(venue_ids,get_tips_num_upper_limit)
+        tips = get_venues_tips(venue_ids)
 
         # 取得してきたtipsの保存先
-        path = 'tips/tips_us/' + search_criteria_name + '_' + keyword + '_tips.json'
+        path = 'tips/tips_ja/' + search_name + '_tips.json'
         save_tips_json(tips, path)
+    print(tips)
 if __name__ == "__main__":
     main()
