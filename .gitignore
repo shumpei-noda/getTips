@@ -5,4 +5,4 @@ tips/
 search_parameter/
 
 # clientIdとclientsecretIdが書いてあるjson
-token.json
+id.json

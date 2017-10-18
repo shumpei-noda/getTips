@@ -88,7 +88,7 @@ def main():
     with open(search_parameters_file_name, 'r') as f:
         search_parameters = json.load(f)
 
-    with open("token.json", 'r') as f:
+    with open("id.json", 'r') as f:
         token = json.load(f)
 
     for search_name in search_parameters:
