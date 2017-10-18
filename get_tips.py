@@ -70,6 +70,17 @@ def save_tips_json(tips, path):
     with open(path, "w") as fh:
         fh.write(tips_json)
 
+def fill_missing_value(search_parameters):
+    parameters = ['ll','near','intent','radius', 'sw',
+                  'ne', 'query', 'limit', 'categoryId',
+                  'llAcc', 'alt', 'altAcc', 'url', 'providerId', 'linkedId']
+
+    for parameter in parameters:
+        if parameter not in search_parameters:
+            search_parameters[parameter] = None
+
+    return search_parameters
+
 def main():
 
     # venue検索条件ファイルの取得
@@ -80,8 +91,8 @@ def main():
         search_parameters = json.load(f)
 
     for search_parameters_name in search_parameters:
-        keyword = random.choice(search_parameters[search_parameters_name])
-
+        search_parameters[search_parameters_name] = fill_missing_value(search_parameters[search_parameters_name])
+        """
         # venue_idの取得
         tips_num_lower_limit = 10
         venue_ids = get_venue_id(keyword,RADIUS,tips_num_lower_limit)
@@ -93,5 +104,6 @@ def main():
         # 取得してきたtipsの保存先
         path = 'tips/tips_us/' + search_parameters_name + '_' + keyword + '_tips.json'
         save_tips_json(tips, path)
+        """
 if __name__ == "__main__":
     main()
