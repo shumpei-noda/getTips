@@ -15,7 +15,7 @@ def get_venue_id(search_parameters, tips_num_lower_limit):
     search_for_venue_response = requests.get(url=search_for_venue_url, params=search_for_venue_parameters)
     venue_data_json = json.loads(search_for_venue_response.text)
     if 'errorType' in venue_data_json['meta']:
-        print(venue_data_json['meta']['errorDetail'])
+        print("error: " + venue_data_json['meta']['errorDetail'])
         return
     venue_data = venue_data_json['response']['venues']
 
