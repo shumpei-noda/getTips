@@ -20,10 +20,10 @@ def get_venue_id(search_parameters, tips_num_lower_limit):
     venue_data = venue_data_json['response']['venues']
 
     #下限よりも多くのtipsがあるvenueのIDを抽出
-    venue_ids = []
+    venue_ids = {}
     for venue in venue_data:
         if venue['stats']['tipCount'] > tips_num_lower_limit:
-            venue_ids += [venue['id']]
+            venue_ids[venue['name']] = venue['id']
 
     return venue_ids
 
@@ -38,7 +38,8 @@ def get_venues_tips(venue_ids, token):
     # 各venueidをapiurlと結合してAPIのget_venue_tipsを叩く
     # 帰ってきたデータを保存する
     venue_tips_data_dict = {}
-    for second_get_venues_tips_url in venue_ids:
+    for key in venue_ids:
+        second_get_venues_tips_url = venue_ids[key]
         get_venues_tips_url = (  first_get_venues_tips_url
                                + second_get_venues_tips_url
                                + third_get_venues_tips_url)
@@ -60,6 +61,8 @@ def get_venues_tips(venue_ids, token):
         one_venue_info['count'] = venue_tips_data_dict[venue_id]['tips']['count']
         tips[venue_id] = one_venue_info
 
+    for key in venue_ids:
+        tips[venue_ids[key]]['name'] = key
     return tips
 
 def save_tips_json(tips, path):
