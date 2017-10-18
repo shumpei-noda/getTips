@@ -8,11 +8,7 @@ VERSION = '20170801'
 def get_venue_id(search_parameters, tips_num_lower_limit):
     # foursquareのAPIを叩いて指定した条件でvenueIDをとってくる
     search_for_venue_url = 'https://api.foursquare.com/v2/venues/search'
-    search_for_venue_parameters = {
-        'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SEACRET,
-        'v': VERSION,
-    }
+    search_for_venue_parameters = {'v': VERSION}
     for search_parameter_key in search_parameters:
         search_for_venue_parameters[search_parameter_key] = search_parameters[search_parameter_key]
 
@@ -27,7 +23,10 @@ def get_venue_id(search_parameters, tips_num_lower_limit):
 
     return venue_ids
 
-def get_venues_tips(venue_ids):
+def get_venues_tips(venue_ids, token):
+    # venueIDが1つもなかったら終了
+    if len(venue_ids) == 0:
+        return
     # venueidをと結合するためurlを分ける
     first_get_venues_tips_url = 'https://api.foursquare.com/v2/venues/'
     third_get_venues_tips_url = '/tips'
@@ -39,11 +38,9 @@ def get_venues_tips(venue_ids):
         get_venues_tips_url = (  first_get_venues_tips_url
                                + second_get_venues_tips_url
                                + third_get_venues_tips_url)
-        get_venues_tips_params = {
-            'client_id': CLIENT_ID,
-            'client_secret': CLIENT_SEACRET,
-            'v': VERSION,
-        }
+        get_venues_tips_params = {'v': VERSION,
+                                  'client_id': token['client_id'],
+                                  'client_secret': token['client_secret']}
         get_venues_tips_response = requests.get(url=get_venues_tips_url, params=get_venues_tips_params)
         venue_tips_data = json.loads(get_venues_tips_response.text)
         venue_tips_data_dict[second_get_venues_tips_url] = venue_tips_data['response']
@@ -82,22 +79,31 @@ def main():
     # venue検索条件ファイルの取得
     if len(sys.argv) != 2:
         return
+    search_parameters_file_name = sys.argv[1]
 
-        search_parameters_file_name = sys.argv[1]
-        with open(search_parameters_file_name, 'r') as f:
-            search_parameters = json.load(f)
+    with open(search_parameters_file_name, 'r') as f:
+        search_parameters = json.load(f)
 
-        for search_name in search_parameters:
-            search_parameters[search_name] = fill_missing_value(search_parameters[search_name])
+    with open("token.json", 'r') as f:
+        token = json.load(f)
+
+    for search_name in search_parameters:
+        search_parameters[search_name] = fill_missing_value(search_parameters[search_name])
+
+        # parameterにclientIdとsecretIdを追加
+        for key in token:
+            search_parameters[search_name][key] = token[key]
+
         # venue_idの取得
         tips_num_lower_limit = 10
         venue_ids = get_venue_id(search_parameters[search_name],tips_num_lower_limit)
 
-        tips = get_venues_tips(venue_ids)
+        # 取得したvenue_idからtipsを取得
+        tips = get_venues_tips(venue_ids, token)
 
         # 取得してきたtipsの保存先
         path = 'tips/tips_ja/' + search_name + '_tips.json'
         save_tips_json(tips, path)
-    print(tips)
+
 if __name__ == "__main__":
     main()
