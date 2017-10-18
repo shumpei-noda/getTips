@@ -3,8 +3,6 @@ import json
 import random
 import requests
 
-CLIENT_ID = 'NQY52G1UBPKOQVRR0FOAGZGD55UJCDOKFGOCGGBHUAN5DV5S'
-CLIENT_SEACRET = 'CV5QHUMNXUFGFDSRNJ4STH3KBV5G0IVQNKTMXDQTTC23AEY2'
 VERSION = '20170801'
 RADIUS = '800'
 
@@ -85,7 +83,7 @@ def main():
     # venue検索条件ファイルの取得
     if len(sys.argv) != 2:
         return
-    
+
         search_parameters_file_name = sys.argv[1]
         with open(search_parameters_file_name, 'r') as f:
             search_parameters = json.load(f)
