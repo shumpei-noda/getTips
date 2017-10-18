@@ -102,7 +102,7 @@ def main():
         tips = get_venues_tips(venue_ids, token)
 
         # 取得してきたtipsの保存先
-        path = 'tips/' + search_name + '_tips.json'
+        path = 'tips/tips_ja/' + search_name + '_tips.json'
         save_tips_json(tips, path)
 
 if __name__ == "__main__":
