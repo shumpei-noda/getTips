@@ -3,3 +3,6 @@ tips/
 
 # tipsをとってくる条件が書かれたファイルが入っているフォルダ
 search_parameter/
+
+# clientIdとclientsecretIdが書いてあるjson
+token.json
