@@ -30,7 +30,7 @@ def get_venue_id(search_parameters, tips_num_lower_limit):
 
     return venue_ids
 
-def get_venues_tips(venue_ids, num_upper_limit):
+def get_venues_tips(venue_ids):
     # venueidをと結合するためurlを分ける
     first_get_venues_tips_url = 'https://api.foursquare.com/v2/venues/'
     third_get_venues_tips_url = '/tips'
@@ -46,7 +46,6 @@ def get_venues_tips(venue_ids, num_upper_limit):
             'client_id': CLIENT_ID,
             'client_secret': CLIENT_SEACRET,
             'v': VERSION,
-            'limit': num_upper_limit
         }
         get_venues_tips_response = requests.get(url=get_venues_tips_url, params=get_venues_tips_params)
         venue_tips_data = json.loads(get_venues_tips_response.text)
@@ -95,15 +94,12 @@ def main():
         # venue_idの取得
         tips_num_lower_limit = 10
         venue_ids = get_venue_id(search_parameters[search_name],tips_num_lower_limit)
-        print(venue_ids)
-    """
-        # 1venueあたりのtips最大取得数
-        get_tips_num_upper_limit = '10'
-        tips = get_venues_tips(venue_ids,get_tips_num_upper_limit)
+
+        tips = get_venues_tips(venue_ids)
 
         # 取得してきたtipsの保存先
-        path = 'tips/tips_us/' + search_parameters_name + '_' + keyword + '_tips.json'
+        path = 'tips/tips_ja/' + search_name + '_tips.json'
         save_tips_json(tips, path)
-    """
+    print(tips)
 if __name__ == "__main__":
     main()
