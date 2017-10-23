@@ -8,7 +8,7 @@ def count(paths):
             tips_json = json.load(open_json)
             n_tips = 0
             for tips in tips_json:
-                n_tips += tips_json[tips]['count']
+                n_tips += len(tips_json[tips]['tips'])
             n_tips_list += [n_tips]
     return n_tips_list
 
