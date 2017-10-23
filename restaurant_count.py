@@ -5,8 +5,8 @@ def count(paths):
     for path in paths:
         with open(path, 'r') as open_json:
             tips_json = json.load(open_json)
-            print("restaurants: ", len(tips_json))
-            
+            print(path, ":", len(tips_json), "restaurants")
+
 def main():
     if len(sys.argv) < 2:
         print("jsonのpathくれ")
