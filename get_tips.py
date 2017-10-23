@@ -44,7 +44,8 @@ def get_venues_tips(venue_ids, token):
                                + third_get_venues_tips_url)
         get_venues_tips_params = {'v': VERSION,
                                   'client_id': token['client_id'],
-                                  'client_secret': token['client_secret']}
+                                  'client_secret': token['client_secret'],
+                                  'limit': 500}
         get_venues_tips_response = requests.get(url=get_venues_tips_url, params=get_venues_tips_params)
         venue_tips_data = json.loads(get_venues_tips_response.text)
         venue_tips_data_dict[second_get_venues_tips_url] = venue_tips_data['response']
