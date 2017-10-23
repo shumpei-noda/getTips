@@ -22,8 +22,7 @@ def get_venue_id(search_parameters, tips_num_lower_limit):
     #下限よりも多くのtipsがあるvenueのIDを抽出
     venue_ids = {}
     for venue in venue_data:
-        if venue['stats']['tipCount'] > tips_num_lower_limit:
-            venue_ids[venue['name']] = venue['id']
+        venue_ids[venue['name']] = venue['id']
 
     return venue_ids
 
@@ -85,6 +84,7 @@ def main():
 
     # venue検索条件ファイルの取得
     if len(sys.argv) != 2:
+        print("検索パラメータくれ")
         return
     search_parameters_file_name = sys.argv[1]
 
