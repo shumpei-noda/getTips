@@ -1,16 +1,30 @@
+import sys
 import json
 
-LATITUDE_METER = 0.000008983148616
-LONGITUDE_METER = 0.000010966382364
-LATITUDE_KILOMETER = LATITUDE_METER * 1000
-LONGITUDE_KILOMETER = LONGITUDE_METER * 1000
+LATITUDE_METER = 0.000008983148616  # 1m移動した時の緯度の変化量
+LONGITUDE_METER = 0.000010966382364 # 1m移動した時の経度の変化量
+LATITUDE_KILOMETER = LATITUDE_METER *  1000     # 1km移動した時の緯度の変化量
+LONGITUDE_KILOMETER = LONGITUDE_METER * 1000    # 1km移動した時の経度の変化量
+AREA_LIMIT = 10000  # 面積10000km^2が検索上限
 
+# 与えられたパラメータから範囲の分割をする
 def get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=10, row_size=10):
+
+    # wの値やcol_size,row_sizeが条件的に不適当である場合,最適化をする
+    if col_size > 10 and row_size > 10:
+        col_size = 10
+        row_size = 10
+    elif col_size > 10:
+        col_size = AREA_LIMIT // row_size
+    elif row_size > 10:
+        row_size = AREA_LIMIT // col_size
     if w > col_size or w > row_size:
         if col_size < row_size:
             w = col_size
         else:
             w = row_size
+    if w <= 0:
+        w = 1
 
     # 東西南北4方位の緯度経度
     north_latitude = center_latitude + LATITUDE_KILOMETER * (row_size / 2)
