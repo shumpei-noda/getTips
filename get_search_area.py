@@ -61,6 +61,7 @@ def get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=10, row_si
 
     return split_ll_list
 
+# 検索パラメータの保存
 def save_parameters(ll_list, path):
     parameters = {}
     count = 0
