@@ -1,3 +1,5 @@
+import json
+
 LATITUDE_METER = 0.000008983148616
 LONGITUDE_METER = 0.000010966382364
 LATITUDE_KILOMETER = LATITUDE_METER * 1000
@@ -45,10 +47,33 @@ def get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=10, row_si
 
     return split_ll_list
 
+def save_parameters(ll_list, path):
+    parameters = {}
+    count = 0
+    for ll_row in ll_list:
+        for ll_col in ll_row:
+            parameter = {}
+            parameter['ll'] = str(ll_col[0][0]) + "," + str(ll_col[0][1])
+            parameter['ne'] = str(ll_col[0][0]) + "," + str(ll_col[0][1])
+            parameter['sw'] = str(ll_col[1][0]) + "," + str(ll_col[1][1])
+            parameter['categoryId'] = "4d4b7105d754a06374d81259"
+            parameter['intent'] = "browse"
+            parameter_set_name = str(count) + "Test2"
+            parameters[parameter_set_name] = parameter
+            count += 1
+    parameters_json = json.dumps(parameters, sort_keys=True, ensure_ascii=False, indent=2)
+    with open(path, "w") as fh:
+        fh.write(parameters_json)
+
+def load_split_parameters():
+
+
 def main():
-    center_latitude = 35.680910
-    center_longitude = 139.767025
+    center_latitude = 34.666902
+    center_longitude = 135.500341
     ll_list = get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=9, row_size=9)
-    save_parameters(ll_list)
+    path = "./search_parameter/test_params2.json"
+    save_parameters(ll_list, path)
+
 if __name__ == '__main__':
     main()
