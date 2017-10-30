@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+    function initMap() {
+      var map;
+      $.getJSON("split_area_parameters.json", function(data) {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: {lat: parseFloat(data["center_latitude"]), lng: parseFloat(data["center_longitude"])},
+          mapTypeId: 'terrain'
+        });
+      });
+
+      $(function() {
+        $.getJSON("search_parameter/test_params.json" , function(data) {
+          for(var params in data){
+            var ne = (data[params]["ne"].split(","));
+            var sw = (data[params]["sw"].split(","));
+            var north = parseFloat(ne[0]);
+            var east = parseFloat(ne[1]);
+            var south = parseFloat(sw[0]);
+            var west = parseFloat(sw[1]);
+
+            var rectangle = new google.maps.Rectangle({
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: '#FF0000',
+              fillOpacity: 0.35,
+              map: map,
+              bounds: {
+                north: north,
+                south: south,
+                east: east,
+                west: west
+              }
+            });
+          }
+        });
+      });
+    }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvIQFMKLJ6QU9jk0Y9JqRrqGHZ7ROl_qk&callback=initMap"
+    async defer></script>
+  </body>
+</html>
