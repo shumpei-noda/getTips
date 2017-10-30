@@ -73,22 +73,36 @@ def save_parameters(ll_list, path):
             parameter['sw'] = str(ll_col[1][0]) + "," + str(ll_col[1][1])
             parameter['categoryId'] = "4d4b7105d754a06374d81259"
             parameter['intent'] = "browse"
-            parameter_set_name = str(count) + "Test2"
+            parameter_set_name = str(count) + "Test"
             parameters[parameter_set_name] = parameter
             count += 1
     parameters_json = json.dumps(parameters, sort_keys=True, ensure_ascii=False, indent=2)
     with open(path, "w") as fh:
         fh.write(parameters_json)
 
-def load_split_parameters():
-
+# 範囲分割パラメータの取得
+def load_split_parameters(path):
+    with open(path) as f:
+        params = json.load(f)
+    return params
 
 def main():
-    center_latitude = 34.666902
-    center_longitude = 135.500341
-    ll_list = get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=9, row_size=9)
-    path = "./search_parameter/test_params2.json"
-    save_parameters(ll_list, path)
+    # パラメータパスがなかった時,パラメータを指定してないことを伝えてプログラムを終了する
+    if len(sys.argv) < 2:
+        print("パラメータパスくれ")
+        return
+    # 引数からパラメータパスの取得
+    split_parameters_path = sys.argv[1]
+    # 範囲分割パラメータを与え、その条件で検索範囲の分割を行う
+    split_parameters = load_split_parameters(split_parameters_path)
+    ll_list = get_search_ne_sw(float(split_parameters['center_latitude']),
+                               float(split_parameters['center_longitude']),
+                               float(split_parameters['w']),
+                               float(split_parameters["col_size"]),
+                               float(split_parameters["row_size"]))
+    # 分割したパラメータを、指定したパスに保存　
+    save_path = "./search_parameter/test_params.json"
+    save_parameters(ll_list, save_path)
 
 if __name__ == '__main__':
     main()
