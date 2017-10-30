@@ -5,27 +5,6 @@ import requests
 
 VERSION = '20170801'
 
-def get_venue_id(search_parameters, tips_num_lower_limit):
-    # foursquareのAPIを叩いて指定した条件でvenueIDをとってくる
-    search_for_venue_url = 'https://api.foursquare.com/v2/venues/search'
-    search_for_venue_parameters = {'v': VERSION}
-    for search_parameter_key in search_parameters:
-        search_for_venue_parameters[search_parameter_key] = search_parameters[search_parameter_key]
-
-    search_for_venue_response = requests.get(url=search_for_venue_url, params=search_for_venue_parameters)
-    venue_data_json = json.loads(search_for_venue_response.text)
-    if 'errorType' in venue_data_json['meta']:
-        print("error: " + venue_data_json['meta']['errorDetail'])
-        return
-    venue_data = venue_data_json['response']['venues']
-
-    #下限よりも多くのtipsがあるvenueのIDを抽出
-    venue_ids = {}
-    for venue in venue_data:
-        venue_ids[venue['name']] = venue['id']
-
-    return venue_ids
-
 def get_venues_tips(venue_ids, token):
     # venueIDが1つもなかったら終了
     if len(venue_ids) == 0:
