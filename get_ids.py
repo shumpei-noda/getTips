@@ -1,15 +1,15 @@
-import sys
+import click
 import json
 import requests
 
 VERSION = '20170801'
 
-def get_venue_id(search_parameters, tips_num_lower_limit):
+def get_venue_id(search_parameter, tips_num_lower_limit):
     # foursquareのAPIを叩いて指定した条件でvenueIDをとってくる
     search_for_venue_url = 'https://api.foursquare.com/v2/venues/search'
     search_for_venue_parameters = {'v': VERSION}
-    for search_parameter_key in search_parameters:
-        search_for_venue_parameters[search_parameter_key] = search_parameters[search_parameter_key]
+    for search_parameter_key in search_parameter:
+        search_for_venue_parameters[search_parameter_key] = search_parameter[search_parameter_key]
 
     # idの取得前に取得条件を表示し、確認する
     unuse_key = ['client_secret', 'client_id', 'v']
@@ -17,11 +17,6 @@ def get_venue_id(search_parameters, tips_num_lower_limit):
         if key in unuse_key or search_for_venue_parameters[key] == None:
             continue
         print(key, ":", search_for_venue_parameters[key])
-    print("?(y/n)")
-
-    ans = input()
-    if ans != 'y':
-        return
 
     search_for_venue_response = requests.get(url=search_for_venue_url, params=search_for_venue_parameters)
     venue_data_json = json.loads(search_for_venue_response.text)
