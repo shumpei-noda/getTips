@@ -19,7 +19,7 @@ def get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=10, row_si
             col_size = AREA_LIMIT // row_size
         elif col_size < row_size:
             row_size = AREA_LIMIT // col_size
-            
+
     if w <= 0:
         w = 1
 
@@ -102,11 +102,11 @@ def load_split_parameters(path):
     return params
 
 @click.command()
-@click.option('--center_latitude', default=0.0, prompt='center_latitude')
-@click.option('--center_longitude', default=0.0, prompt='center_longitude')
-@click.option('--width', default=0.0, prompt='width')
-@click.option('--column_size', default=0.0, prompt='column_size')
-@click.option('--row_size', default=0.0, prompt='row_size')
+@click.option('--center_latitude', default=0.0, prompt='center_latitude', help='中心緯度')
+@click.option('--center_longitude', default=0.0, prompt='center_longitude', help='中心経度')
+@click.option('--width', default=0.0, prompt='width', help='分割幅(縦横同じ、正方形)(col,row sizeよりも大きい値となると適切な値に変更)')
+@click.option('--column_size', default=0.0, prompt='column_size', help='最大横幅(最大面積10000km^2)')
+@click.option('--row_size', default=0.0, prompt='row_size', help='最大縦幅(最大面積10000km^2)')
 def main(center_latitude, center_longitude, width, column_size, row_size):
 
     # 範囲分割パラメータを与え、その条件で検索範囲の分割を行う
