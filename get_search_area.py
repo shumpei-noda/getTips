@@ -105,11 +105,11 @@ def load_split_parameters(path):
     return params
 
 @click.command()
-@click.option('--center_latitude', prompt='center_latitude')
-@click.option('--center_longitude', prompt='center_longitude')
-@click.option('--width', prompt='width')
-@click.option('--column_size', prompt='column_size')
-@click.option('--row_size', prompt='row_size')
+@click.option('--center_latitude', default=0.0, prompt='center_latitude')
+@click.option('--center_longitude', default=0.0, prompt='center_longitude')
+@click.option('--width', default=0.0, prompt='width')
+@click.option('--column_size', default=0.0, prompt='column_size')
+@click.option('--row_size', default=0.0, prompt='row_size')
 def main(center_latitude, center_longitude, width, column_size, row_size):
 
     # 範囲分割パラメータを与え、その条件で検索範囲の分割を行う
