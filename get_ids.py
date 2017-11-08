@@ -42,7 +42,6 @@ def print_ids_json(ids):
     if not ids:
         return
 
-    print(ids)
     ids_json = json.dumps(ids, sort_keys=True, ensure_ascii=False, indent=2)
     print(ids_json)
     return
