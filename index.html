@@ -24,16 +24,17 @@
     <script>
     function initMap() {
       var map;
-      $.getJSON("split_area_parameters.json", function(data) {
+      $.getJSON("test.json", function(data) {
+        var ll = data[0]["ll"].split(",");
         map = new google.maps.Map(document.getElementById('map'), {
           zoom: 10,
-          center: {lat: parseFloat(data["center_latitude"]), lng: parseFloat(data["center_longitude"])},
+          center: {lat: parseFloat(ll[0]), lng: parseFloat(ll[1])},
           mapTypeId: 'terrain'
         });
       });
 
       $(function() {
-        $.getJSON("search_parameter/test_params.json" , function(data) {
+        $.getJSON("test.json" , function(data) {
           for(var params in data){
             var ne = (data[params]["ne"].split(","));
             var sw = (data[params]["sw"].split(","));
