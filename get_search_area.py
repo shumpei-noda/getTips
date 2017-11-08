@@ -1,4 +1,4 @@
-import sys
+import click
 import json
 
 LATITUDE_METER = 0.000008983148616  # 1m移動した時の緯度の変化量
@@ -79,6 +79,24 @@ def save_parameters(ll_list, path):
     parameters_json = json.dumps(parameters, sort_keys=True, ensure_ascii=False, indent=2)
     with open(path, "w") as fh:
         fh.write(parameters_json)
+    return
+
+# 指定した範囲を分割して得られたパラメータを標準出力する
+def print_parameter(ll_list):
+    parameters = []
+    for ll_row in ll_list:
+        for ll_col in ll_row:
+            parameter = {}
+            parameter['ll'] = str(ll_col[0][0]) + "," + str(ll_col[0][1])
+            parameter['ne'] = str(ll_col[0][0]) + "," + str(ll_col[0][1])
+            parameter['sw'] = str(ll_col[1][0]) + "," + str(ll_col[1][1])
+            parameter['categoryId'] = "4d4b7105d754a06374d81259"    # 飲食店カテゴリID
+            parameter['intent'] = "browse"                          # venueid取得方式
+            parameters += [parameter]
+    parameters_json = json.dumps(parameters, sort_keys=True, ensure_ascii=False, indent=2)
+
+    print(parameters_json)
+    return
 
 # 範囲分割パラメータの取得
 def load_split_parameters(path):
@@ -86,23 +104,22 @@ def load_split_parameters(path):
         params = json.load(f)
     return params
 
-def main():
-    # パラメータパスがなかった時,パラメータを指定してないことを伝えてプログラムを終了する
-    if len(sys.argv) < 2:
-        print("パラメータパスくれ")
-        return
-    # 引数からパラメータパスの取得
-    split_parameters_path = sys.argv[1]
+@click.command()
+@click.option('--center_latitude', prompt='center_latitude')
+@click.option('--center_longitude', prompt='center_longitude')
+@click.option('--width', prompt='width')
+@click.option('--column_size', prompt='column_size')
+@click.option('--row_size', prompt='row_size')
+def main(center_latitude, center_longitude, width, column_size, row_size):
+
     # 範囲分割パラメータを与え、その条件で検索範囲の分割を行う
-    split_parameters = load_split_parameters(split_parameters_path)
-    ll_list = get_search_ne_sw(float(split_parameters['center_latitude']),
-                               float(split_parameters['center_longitude']),
-                               float(split_parameters['w']),
-                               float(split_parameters["col_size"]),
-                               float(split_parameters["row_size"]))
-    # 分割したパラメータを、指定したパスに保存　
-    save_path = "./search_parameter/test_params.json"
-    save_parameters(ll_list, save_path)
+    ll_list = get_search_ne_sw(float(center_latitude),
+                               float(center_longitude),
+                               float(width),
+                               float(column_size),
+                               float(row_size))
+    # 分割したパラメータを標準出力
+    print_parameter(ll_list)
 
 if __name__ == '__main__':
     main()
