@@ -11,18 +11,15 @@ AREA_LIMIT = 10000  # 面積10000km^2が検索上限
 def get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=10, row_size=10):
 
     # wの値やcol_size,row_sizeが条件的に不適当である場合,最適化をする
-    if col_size > 100 and row_size > 100:
-        col_size = 100
-        row_size = 100
-    elif col_size > 100:
-        col_size = AREA_LIMIT // row_size
-    elif row_size > 100:
-        row_size = AREA_LIMIT // col_size
-    if w > col_size or w > row_size:
-        if col_size < row_size:
-            w = col_size
-        else:
-            w = row_size
+    if col_size * row_size > 10000:
+        if col_size > 100 and row_size > 100:
+            col_size = 100
+            row_size = 100
+        elif col_size > row_size:
+            col_size = AREA_LIMIT // row_size
+        elif col_size < row_size:
+            row_size = AREA_LIMIT // col_size
+            
     if w <= 0:
         w = 1
 
