@@ -41,8 +41,8 @@ def print_ids_json(ids):
     return
 
 @click.command()
-@click.argument('parameters_file', type=click.File('r'))
-@click.argument('id_file', type=click.File('r'))
+@click.argument('parameters_file', type=click.File('r'), help='検索条件が保管されているjson')
+@click.argument('id_file', type=click.File('r'), help='foursquareアプリのCLIENT_IDとCLIENT_SECRETが保管されているjson')
 def main(parameters_file, id_file):
 
     search_parameter = json.load(parameters_file)
