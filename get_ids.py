@@ -37,49 +37,43 @@ def get_venue_id(search_parameters, tips_num_lower_limit):
 
     return venue_ids
 
-# 欠損値の補完
-def fill_missing_value(search_parameters):
-    parameter_keys = ['ll','near','intent','radius', 'sw',
-                  'ne', 'query', 'limit', 'categoryId',
-                  'llAcc', 'alt', 'altAcc', 'url', 'providerId', 'linkedId']
-
-    for parameter_key in parameter_keys:
-        if parameter_key not in search_parameters:
-            search_parameters[parameter_key] = None
-
-    return search_parameters
-
 # idの保存
 def save_ids_json(ids, path):
     ids_json = json.dumps(ids, sort_keys=True, ensure_ascii=False, indent=2)
     with open(path, "w") as fh:
         fh.write(ids_json)
 
-def main():
-    if len(sys.argv) != 2:
-        print("検索パラメータくれ")
+def print_ids_json(ids):
+    if not ids:
         return
-    search_parameters_file_name = sys.argv[1]
 
-    with open(search_parameters_file_name, 'r') as f:
-        search_parameters = json.load(f)
+    print(ids)
+    ids_json = json.dumps(ids, sort_keys=True, ensure_ascii=False, indent=2)
+    print(ids_json)
+    return
 
-    with open("id.json", 'r') as f:
-        token = json.load(f)
+@click.command()
+@click.argument('parameters_file', type=click.File('r'))
+@click.argument('id_file', type=click.File('r'))
+def main(parameters_file, id_file):
 
-    for search_name in search_parameters:
-        search_parameters[search_name] = fill_missing_value(search_parameters[search_name])
-        search_parameters[search_name]['ll'] = "35.680910,139.767025"
+    search_parameter = json.load(parameters_file)
+    token = json.load(id_file)
+
+    ids_list = []
+
+    for search_parameter in search_parameter:
         # parameterにclientIdとsecretIdを追加
         for key in token:
-            search_parameters[search_name][key] = token[key]
+            search_parameter[key] = token[key]
 
         tips_num_lower_limit = 10
-        ids = get_venue_id(search_parameters[search_name],tips_num_lower_limit)
+        ids = get_venue_id(search_parameter,tips_num_lower_limit)
 
-        path = "./ids/" + search_name + ".json"
-        save_ids_json(ids, path)
+        if ids:
+            ids_list += [ids]
 
+    print_ids_json(ids_list)
 
 if __name__ == '__main__':
     main()
