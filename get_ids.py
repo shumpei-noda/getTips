@@ -12,12 +12,6 @@ def get_venue_id(search_parameter, tips_num_lower_limit):
         search_for_venue_parameters[search_parameter_key] = search_parameter[search_parameter_key]
 
     # idの取得前に取得条件を表示し、確認する
-    unuse_key = ['client_secret', 'client_id', 'v']
-    for key in search_for_venue_parameters:
-        if key in unuse_key or search_for_venue_parameters[key] == None:
-            continue
-        print(key, ":", search_for_venue_parameters[key])
-
     search_for_venue_response = requests.get(url=search_for_venue_url, params=search_for_venue_parameters)
     venue_data_json = json.loads(search_for_venue_response.text)
     if 'errorType' in venue_data_json['meta']:
