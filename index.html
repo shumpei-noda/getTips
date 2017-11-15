@@ -26,8 +26,8 @@
       var map;
 
       $(function() {
-        $.getJSON("test.json" , function(data) {
-          var ll = data[0]["ll"].split(",");
+        $.getJSON("HOGE.json" , function(data) {
+          var ll = data[0]["ne"].split(",");
           map = new google.maps.Map(document.getElementById('map'), {
             zoom: 10,
             center: {lat: parseFloat(ll[0]), lng: parseFloat(ll[1])},
