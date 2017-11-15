@@ -89,17 +89,12 @@ def print_parameter(ll_list):
             parameter['sw'] = str(ll_col[1][0]) + "," + str(ll_col[1][1])
             parameter['categoryId'] = "4d4b7105d754a06374d81259"    # 飲食店カテゴリID
             parameter['intent'] = "browse"                          # venueid取得方式
+            parameter['limit'] = "50"
             parameters += [parameter]
     parameters_json = json.dumps(parameters, sort_keys=True, ensure_ascii=False, indent=2)
 
     print(parameters_json)
     return
-
-# 範囲分割パラメータの取得
-def load_split_parameters(path):
-    with open(path) as f:
-        params = json.load(f)
-    return params
 
 @click.command()
 @click.option('--center_latitude', default=0.0, prompt='center_latitude', help='中心緯度')
