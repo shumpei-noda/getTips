@@ -44,23 +44,20 @@ def print_ids_json(ids):
 @click.command()
 @click.argument('parameters_file', type=click.File('r'))
 def main(parameters_file):
-
     search_parameter = json.load(parameters_file)
 
     token = {}
-    token['client_id'] = os.environ['FOURSQUARE_CLIENT_ID']
-    token['client_secret'] = os.environ['FOURSQUARE_CLIENT_SECRET']
+    user_ids['client_id'] = os.environ['FOURSQUARE_CLIENT_ID']
+    user_ids['client_secret'] = os.environ['FOURSQUARE_CLIENT_SECRET']
 
     ids_list = []
-
     for search_parameter in search_parameter:
         # parameterにclientIdとsecretIdを追加
-        for key in token:
-            search_parameter[key] = token[key]
+        for key in user_ids:
+            search_parameter[key] = user_ids[key]
 
         tips_num_lower_limit = 10
         ids = get_venue_id(search_parameter,tips_num_lower_limit)
-
         if ids:
             ids_list += [ids]
 
