@@ -1,5 +1,6 @@
-import click
+import os
 import json
+import click
 import requests
 
 VERSION = '20170801'
@@ -42,11 +43,13 @@ def print_ids_json(ids):
 
 @click.command()
 @click.argument('parameters_file', type=click.File('r'))
-@click.argument('id_file', type=click.File('r'))
-def main(parameters_file, id_file):
+def main(parameters_file):
 
     search_parameter = json.load(parameters_file)
-    token = json.load(id_file)
+
+    token = {}
+    token['client_id'] = os.environ['FOURSQUARE_CLIENT_ID']
+    token['client_secret'] = os.environ['FOURSQUARE_CLIENT_SECRET']
 
     ids_list = []
 
