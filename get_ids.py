@@ -18,8 +18,8 @@ def get_venue_id(search_parameter, tips_num_lower_limit):
     if 'errorType' in venue_data_json['meta']:
         print("error: " + venue_data_json['meta']['errorDetail'])
         return
-    venue_data = venue_data_json['response']['venues']
 
+    venue_data = venue_data_json['response']['venues']
     #下限よりも多くのtipsがあるvenueのIDを抽出
     venue_ids = {}
     for venue in venue_data:
@@ -30,7 +30,7 @@ def get_venue_id(search_parameter, tips_num_lower_limit):
 # idの保存
 def save_ids_json(ids, path):
     ids_json = json.dumps(ids, sort_keys=True, ensure_ascii=False, indent=2)
-    with open(path, "w") as fh:
+    with open(path, 'w') as fh:
         fh.write(ids_json)
 
 def print_ids_json(ids):
