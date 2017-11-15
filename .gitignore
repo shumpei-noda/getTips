@@ -2,9 +2,8 @@
 tips/
 # idが保存されているフォルダ
 ids/
-
 # tipsをとってくる条件が書かれたファイルが入っているフォルダ
 search_parameter/
 
-# clientIdとclientsecretIdが書いてあるjson
-id.json
+# index.htmlのバックアップファイル
+index.html.bak
