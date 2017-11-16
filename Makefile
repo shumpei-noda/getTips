@@ -12,7 +12,7 @@ IDS_PATH = $(subst search_parameter,ids,$(subst params,ids,$(SEARCH_PARAMS_PATH)
 test:
 	$(MAKE) split
 	$(MAKE) get_ids
-	$(PY) get_id_num_ave_sum_max.py $(IDS_PATH)
+	$(PY) get_id_num_ave_sum_max.py $(COL_SIZE) $(ROW_SIZE) $(IDS_PATH)
 
 
 get_ids: get_ids.py
