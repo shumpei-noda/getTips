@@ -10,34 +10,24 @@ AREA_LIMIT = 10000  # 面積10000km^2が検索上限
 # 与えられたパラメータから範囲の分割をする
 def get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=10, row_size=10):
 
-    # wの値やcol_size,row_sizeが条件的に不適当である場合,最適化をする
-    if col_size * row_size > 10000:
-        if col_size > 100 and row_size > 100:
-            col_size = 100
-            row_size = 100
-        elif col_size > row_size:
-            col_size = AREA_LIMIT // row_size
-        elif col_size < row_size:
-            row_size = AREA_LIMIT // col_size
-
+    if w * col_size * w * row_size > 100:
+        print("ダメです")
+        # 適切なサイズに変換する方法が思い浮かばないので保留
+        return
     if w <= 0:
         w = 1
 
     # 東西南北4方位の緯度経度
-    north_latitude = center_latitude + LATITUDE_KILOMETER * (row_size / 2)
-    south_latitude = center_latitude - LATITUDE_KILOMETER * (row_size / 2)
-    east_longitude = center_longitude + LONGITUDE_KILOMETER * (col_size / 2)
-    west_longitude = center_longitude - LONGITUDE_KILOMETER * (col_size / 2)
-
-    # 行と列の分割数
-    n_split_col = col_size / w
-    n_split_row = row_size / w
+    north_latitude = center_latitude + LATITUDE_KILOMETER * ((col_size * w) / 2)
+    south_latitude = center_latitude - LATITUDE_KILOMETER * ((col_size * w) / 2)
+    east_longitude = center_longitude + LONGITUDE_KILOMETER * ((row_size * w) / 2)
+    west_longitude = center_longitude - LONGITUDE_KILOMETER * ((row_size * w) / 2)
 
     # 分割された一区画の北東(ne)と南東(sw)の緯度経度を格納するリスト
-    split_ll_list = [[[] for i in range(int(n_split_col))] for j in range(int(n_split_row))]
+    split_ll_list = [[[] for i in range(int(row_size))] for j in range(int(col_size))]
 
-    for i in range(int(n_split_row)):
-        for j in range(int(n_split_col)):
+    for i in range(int(col_size)):
+        for j in range(int(row_size)):
             ##四角形の右上端と左下端の緯度経度計算
             # 一区画の右上から左下の緯度経度の変化量
             d_latitude_area = LATITUDE_KILOMETER * w
