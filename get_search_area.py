@@ -10,7 +10,7 @@ AREA_LIMIT = 10000  # 面積10000km^2が検索上限
 # 与えられたパラメータから範囲の分割をする
 def get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=10, row_size=10):
 
-    if w * col_size * w * row_size > 100:
+    if w * col_size * w * row_size > 10000:
         print("ダメです")
         # 適切なサイズに変換する方法が思い浮かばないので保留
         return
