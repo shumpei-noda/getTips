@@ -8,7 +8,7 @@ LONGITUDE_KILOMETER = LONGITUDE_METER * 1000    # 1km移動した時の経度の
 AREA_LIMIT = 10000  # 面積10000km^2が検索上限
 
 # 与えられたパラメータから範囲の分割をする
-def get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=10, row_size=10):
+def get_search_ne_sw(center_latitude, center_longitude, w=1, col_size=5, row_size=5):
 
     if w * col_size * w * row_size > 10000:
         print("ダメです")
