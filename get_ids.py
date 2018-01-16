@@ -15,10 +15,12 @@ def get_venue_id(search_parameter):
     # idの取得前に取得条件を表示し、確認する
     search_for_venue_response = requests.get(url=SEARCH_FOR_VENUE_URL, params=search_for_venue_parameters)
     venue_data_json = json.loads(search_for_venue_response.text)
+
+    # 取得したデータがエラーを含んでいた場合、エラーを返す
     if 'errorType' in venue_data_json['meta']:
         raise Exception('spam', 'eggs')
+
     venue_data = venue_data_json['response']['venues']
-    #下限よりも多くのtipsがあるvenueのIDを抽出
     venue_ids = {}
     for venue in venue_data:
         venue_ids[venue['name']] = venue['id']

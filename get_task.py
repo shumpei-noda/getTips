@@ -7,7 +7,13 @@ import venues_table
 from time import sleep
 from get_ids import get_venue_id
 
+WAIT_STATUS = 0
+RUNNNING_STATUS = 1
+DONE_STATUS = 2
+ERROR_STATUS = 3
+
 def fetch(row):
+    # apiで使用するパラメータ
     parameters = {'categoryId': "4d4b7105d754a06374d81259",
                   "intent": "browse",
                   "limit": "50",
@@ -15,9 +21,12 @@ def fetch(row):
                   "ne": str(row['north_latitude']) + "," + str(row['east_longitude']),
                   "sw": str(row['south_latitude']) + "," + str(row['west_longitude']),
                   "client_id": os.environ['FOURSQUARE_CLIENT_ID'],
-                  "client_secret": os.environ['FOURSQUARE_CLIENT_SECRET']}
+                  "client_secret": os.environ['FOURSQUARE_CLIENT_SECRET']
+                 }
     requests_table.update_status(row['locations.id'], 1)
     venue_ids = None
+
+    # エラーが返ってきた場合、このlocation情報のrequestsテーブルのステータスをエラー(3)にする
     try:
         venue_ids, raw_data = get_venue_id(parameters)
     except Exception as inst:
