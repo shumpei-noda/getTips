@@ -34,10 +34,7 @@ def fetch(row):
         requests_table.update_status(row['locations.id'], 3)
         return
 
-    if venue_ids == "err":
-        requests_table.update_status(row['locations.id'], 3)
-    else:
-        requests_table.update_status(row['locations.id'], 2)
+    requests_table.update_status(row['locations.id'], 2)
 
     json_data = json.loads(raw_data)
 
