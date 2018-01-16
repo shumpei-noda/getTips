@@ -38,26 +38,5 @@ def print_ids_json(ids):
     print(ids_json)
     return
 
-@click.command()
-@click.argument('parameters_file', type=click.File('r'))
-def main(parameters_file):
-    search_parameters = json.load(parameters_file)
-
-    user_ids = {}
-    user_ids['client_id'] = os.environ['FOURSQUARE_CLIENT_ID']
-    user_ids['client_secret'] = os.environ['FOURSQUARE_CLIENT_SECRET']
-
-    ids_list = []
-    for search_parameter in search_parameters:
-        # parameterにclientIdとsecretIdを追加
-        for key in user_ids:
-            search_parameter[key] = user_ids[key]
-
-        tips_num_lower_limit = 10
-        ids = get_venue_id(search_parameter,tips_num_lower_limit)
-        ids_list += [ids]
-
-    print_ids_json(ids_list)
-
 if __name__ == '__main__':
     main()
