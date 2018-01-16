@@ -13,3 +13,6 @@ jquery-3.2.1.min.js
 
 # 汎用性のないファイル
 store_json_db.py
+
+# mysqlのデータの保存先
+data/
