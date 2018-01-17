@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 import random
@@ -5,29 +6,30 @@ import requests
 
 VERSION = '20170801'
 
-def get_venues_tips(venue_ids, token):
-    # venueIDが1つもなかったら終了
-    if len(venue_ids) == 0:
-        return
+def get_venues_tips(second_get_venues_tips_url):
     # venueidをと結合するためurlを分ける
     first_get_venues_tips_url = 'https://api.foursquare.com/v2/venues/'
     third_get_venues_tips_url = '/tips'
 
     # 各venueidをapiurlと結合してAPIのget_venue_tipsを叩く
     # 帰ってきたデータを保存する
+    get_venues_tips_url = ( first_get_venues_tips_url
+                          + second_get_venues_tips_url
+                          + third_get_venues_tips_url)
+
+    get_venues_tips_params = {'v': VERSION,
+                              "client_id": os.environ['FOURSQUARE_CLIENT_ID'],
+                              "client_secret": os.environ['FOURSQUARE_CLIENT_SECRET'],
+                              'limit': 500}
+
+    get_venues_tips_response = requests.get(url=get_venues_tips_url, params=get_venues_tips_params)
+    venue_tips_data = json.loads(get_venues_tips_response.text)
+
+    if 'errorType' in venue_tips_data['meta']:
+        raise Exception('spam', 'eggs')
+
     venue_tips_data_dict = {}
-    for key in venue_ids:
-        second_get_venues_tips_url = venue_ids[key]
-        get_venues_tips_url = (  first_get_venues_tips_url
-                               + second_get_venues_tips_url
-                               + third_get_venues_tips_url)
-        get_venues_tips_params = {'v': VERSION,
-                                  'client_id': token['client_id'],
-                                  'client_secret': token['client_secret'],
-                                  'limit': 500}
-        get_venues_tips_response = requests.get(url=get_venues_tips_url, params=get_venues_tips_params)
-        venue_tips_data = json.loads(get_venues_tips_response.text)
-        venue_tips_data_dict[second_get_venues_tips_url] = venue_tips_data['response']
+    venue_tips_data_dict[second_get_venues_tips_url] = venue_tips_data['response']
 
     # 各venue_idのtipsをまとめて保管する
     tips = {}
