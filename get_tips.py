@@ -6,16 +6,16 @@ import requests
 
 VERSION = '20170801'
 
-def get_venues_tips(second_get_venues_tips_url):
+def get_venues_tips(venue_id):
     # venueidをと結合するためurlを分ける
     first_get_venues_tips_url = 'https://api.foursquare.com/v2/venues/'
-    third_get_venues_tips_url = '/tips'
+    second_get_venues_tips_url = '/tips'
 
     # 各venueidをapiurlと結合してAPIのget_venue_tipsを叩く
     # 帰ってきたデータを保存する
     get_venues_tips_url = ( first_get_venues_tips_url
-                          + second_get_venues_tips_url
-                          + third_get_venues_tips_url)
+                          + venue_id
+                          + second_get_venues_tips_url)
 
     get_venues_tips_params = {'v': VERSION,
                               "client_id": os.environ['FOURSQUARE_CLIENT_ID'],
@@ -42,9 +42,7 @@ def get_venues_tips(second_get_venues_tips_url):
         one_venue_info['count'] = venue_tips_data_dict[venue_id]['tips']['count']
         tips[venue_id] = one_venue_info
 
-    for key in venue_ids:
-        tips[venue_ids[key]]['name'] = key
-    return tips
+    return tips, get_venues_tips_response.text
 
 def save_tips_json(tips, path):
     tips_json = json.dumps(tips, sort_keys=True, ensure_ascii=False, indent=2)
@@ -61,7 +59,7 @@ def fill_missing_value(search_parameters):
             search_parameters[parameter_key] = None
 
     return search_parameters
-
+"""
 def main():
 
     # venue検索条件ファイルの取得
@@ -94,6 +92,6 @@ def main():
         # 取得してきたtipsの保存先
         path = 'tips/tips_ja/' + search_name + '_tips.json'
         save_tips_json(tips, path)
-
+"""
 if __name__ == "__main__":
     main()
