@@ -23,6 +23,8 @@ def fetch(row):
                   "client_id": os.environ['FOURSQUARE_CLIENT_ID'],
                   "client_secret": os.environ['FOURSQUARE_CLIENT_SECRET']
                  }
+
+    # 取得してくる前にステータスを取得中(1)に変更
     requests_table.update_status(row['locations.id'], 1)
     venue_ids = None
 
@@ -34,16 +36,18 @@ def fetch(row):
         requests_table.update_status(row['locations.id'], 3)
         return
 
+    # venue情報の取得ができたので、取得完了(2)にステータスを更新する
     requests_table.update_status(row['locations.id'], 2)
 
+    # 取得してきたvenue情報をvenuesテーブルに生データで保存する
     json_data = json.loads(raw_data)
-
     for data in json_data['response']['venues']:
         venues_table.insert(name=data['name'],
                             venue_id=data['id'],
                             raw_data=json.dumps(data, sort_keys=True, ensure_ascii=False)
                            )
 
+    # 取得待ちlocation情報を取得し、venue情報を取得する
 def main():
     rows = requests_table.get_waiting_task()
     for row in rows:
