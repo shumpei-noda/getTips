@@ -29,7 +29,7 @@ def get():
     rows = db.table('tips_requests').get()
     return rows
 
-def get_join_locations():
+def get_join_venues():
     rows = db.table('tips_requests').join('venues', 'tips_requests.venue_id', '=', 'venues.id').get()
     return rows
 
