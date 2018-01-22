@@ -17,16 +17,12 @@ config = {
 db = DatabaseManager(config)
 
 def insert(venue_id, tip, raw_data):
-    if db.table('tips').where('tip', tip).get():
-        rows = db.table('tips').where('tip', tip).get();
-        rows.where('venue_id', venue_id).update({'updated_at': datetime.datetime.today()})
-    else:
-        db.table('tips').insert({'venue_id': venue_id,
-                                 'tip': tip,
-                                 'raw_data': raw_data,
-                                 'created_at': datetime.datetime.today(),
-                                 'updated_at': datetime.datetime.today()
-                                 })
+    db.table('tips').insert({'venue_id': venue_id,
+                             'tip': tip,
+                             'raw_data': raw_data,
+                             'created_at': datetime.datetime.today(),
+                             'updated_at': datetime.datetime.today()
+                            })
 
 def get():
     rows = db.table('venues').get()
