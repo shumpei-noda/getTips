@@ -26,7 +26,7 @@ def get_venues_tips(venue_id):
     venue_tips_data = json.loads(get_venues_tips_response.text)
 
     if 'errorType' in venue_tips_data['meta']:
-        raise Exception('spam', 'eggs')
+        raise Exception(venue_tips_data['meta']['errorType'])
 
     venue_tips_data_dict = {}
     venue_tips_data_dict[second_get_venues_tips_url] = venue_tips_data['response']
