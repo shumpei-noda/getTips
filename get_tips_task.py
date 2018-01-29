@@ -46,7 +46,7 @@ def main():
     rows = tips_requests_table.get_waiting_task()
     for row in rows:
         fetch(row)
-        sleep(4)
+        sleep(8)
 
 if __name__ == "__main__":
     while True:
