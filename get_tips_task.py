@@ -35,12 +35,14 @@ def fetch(row):
     # 取得してきたvenue情報をvenuesテーブルに生データで保存する
     json_data = json.loads(raw_data)
     for data in json_data['response']['tips']['items']:
+        tips_table.begin_transaction()
         try:
             tips_table.insert(venue_id=row['venues.id'],
                               tip=data['text'],
                               raw_data=json.dumps(data, sort_keys=True, ensure_ascii=False)
                              )
         except Exception as inst:
+            tips_table.rollback()
             tips_requests_table.update_status(row['venues.id'], 3)
             return
 
@@ -49,6 +51,7 @@ def main():
     tips_requests_table.begin_transaction()
     row = tips_requests_table.get_waiting_task()
     tips_requests_table.commit()
+    tips_table.commit()
     fetch(row)
     sleep(8)
 
