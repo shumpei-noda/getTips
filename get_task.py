@@ -44,6 +44,7 @@ def fetch(row):
     for data in json_data['response']['venues']:
         venues_table.insert(name=data['name'],
                             venue_id=data['id'],
+                            tip_count=data['stats']['tipCount']
                             raw_data=json.dumps(data, sort_keys=True, ensure_ascii=False)
                            )
 

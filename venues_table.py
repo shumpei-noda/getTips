@@ -15,15 +15,17 @@ config = {
 }
 db = DatabaseManager(config)
 
-def insert(name, venue_id, raw_data):
+def insert(name, venue_id, tip_count, raw_data):
     if db.table('venues').where('name',name).get():
         db.table('venues').where('name', name).update({'venue_id': venue_id,
-                                                          'raw_data': raw_data,
-                                                          'updated_at': datetime.datetime.today()
-                                                         })
+                                                       'tip_count': tip_count,
+                                                       'raw_data': raw_data,
+                                                       'updated_at': datetime.datetime.today()
+                                                      })
     else:
         db.table('venues').insert({'name': name,
                                    'venue_id': venue_id,
+                                   'tip_count': tip_count,
                                    'raw_data': raw_data,
                                    'created_at': datetime.datetime.today(),
                                    'updated_at': datetime.datetime.today()
