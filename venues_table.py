@@ -34,3 +34,6 @@ def insert(name, venue_id, tip_count, raw_data):
 def get():
     rows = db.table('venues').get()
     return rows
+
+def get_tip_count_null():
+    return db.table('venues').where_null('tip_count').get()
