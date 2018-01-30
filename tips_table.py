@@ -27,3 +27,12 @@ def insert(venue_id, tip, raw_data):
 def get():
     rows = db.table('venues').get()
     return rows
+
+def begin_transaction():
+    db.begin_transaction()
+
+def rollback():
+    db.rollback()
+
+def commit():
+    db.commit()
