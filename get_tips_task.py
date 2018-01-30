@@ -29,23 +29,28 @@ def fetch(row):
     tips_requests_table.update_status(row['venues.id'], 2)
 
     # tipsの個数が0であった場合終了
-    if not tips:
+    if tips == row['tip_count']:
         return
 
     # 取得してきたvenue情報をvenuesテーブルに生データで保存する
     json_data = json.loads(raw_data)
     for data in json_data['response']['tips']['items']:
-        tips_table.insert(venue_id=row['venues.id'],
-                            tip=data['text'],
-                            raw_data=json.dumps(data, sort_keys=True, ensure_ascii=False)
-                           )
+        try:
+            tips_table.insert(venue_id=row['venues.id'],
+                              tip=data['text'],
+                              raw_data=json.dumps(data, sort_keys=True, ensure_ascii=False)
+                             )
+        except Exception as inst:
+            tips_requests_table.update_status(row['venues.id'], 3)
+            return
 
     # 取得待ちlocation情報を取得し、venue情報を取得する
 def main():
-    rows = tips_requests_table.get_waiting_task()
-    for row in rows:
-        fetch(row)
-        sleep(8)
+    tips_requests_table.begin_transaction()
+    row = tips_requests_table.get_waiting_task()
+    tips_requests_table.commit()
+    fetch(row)
+    sleep(8)
 
 if __name__ == "__main__":
     while True:
