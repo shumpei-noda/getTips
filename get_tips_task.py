@@ -16,8 +16,8 @@ ERROR_STATUS = 3
 def fetch(row):
     # 取得してくる前にステータスを取得中(1)に変更
     tips_requests_table.update_status(row['venues.id'], 1)
+    tips_requests_table.commit()
     venue_ids = None
-
     # エラーが返ってきた場合、このlocation情報のrequestsテーブルのステータスをエラー(3)にする
     try:
         tips, raw_data = get_venues_tips(row['venues.venue_id'])
@@ -35,23 +35,20 @@ def fetch(row):
     # 取得してきたvenue情報をvenuesテーブルに生データで保存する
     json_data = json.loads(raw_data)
     for data in json_data['response']['tips']['items']:
-        tips_table.begin_transaction()
         try:
             tips_table.insert(venue_id=row['venues.id'],
                               tip=data['text'],
                               raw_data=json.dumps(data, sort_keys=True, ensure_ascii=False)
                              )
         except Exception as inst:
-            tips_table.rollback()
             tips_requests_table.update_status(row['venues.id'], 3)
             return
+    return
 
     # 取得待ちlocation情報を取得し、venue情報を取得する
 def main():
     tips_requests_table.begin_transaction()
     row = tips_requests_table.get_waiting_task()
-    tips_requests_table.commit()
-    tips_table.commit()
     fetch(row)
     sleep(8)
 
