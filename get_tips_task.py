@@ -22,7 +22,7 @@ def fetch(row):
     try:
         tips, raw_data = get_venues_tips(row['venues.venue_id'])
     except Exception as inst:
-        tips_requests_table.update_status(row['venues.id'], 3)
+        #tips_requests_table.update_status(row['venues.id'], 3)
         return
 
     # venue情報の取得ができたので、取得完了(2)にステータスを更新する
