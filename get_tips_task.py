@@ -50,7 +50,7 @@ def main():
     tips_requests_table.begin_transaction()
     row = tips_requests_table.get_waiting_task()
     fetch(row)
-    sleep(8)
+    sleep(17.5)
 
 if __name__ == "__main__":
     while True:
