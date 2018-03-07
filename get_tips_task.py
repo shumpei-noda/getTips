@@ -45,12 +45,12 @@ def fetch(row):
             return
     return
 
-    # 取得待ちlocation情報を取得し、venue情報を取得する
+# 取得待ちlocation情報を取得し、venue情報を取得する
 def main():
     tips_requests_table.begin_transaction()
     row = tips_requests_table.get_waiting_task()
     fetch(row)
-    sleep(17.5)
+    sleep(8)
 
 if __name__ == "__main__":
     while True:
