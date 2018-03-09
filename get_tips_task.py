@@ -22,9 +22,37 @@ def fetch(row):
     try:
         tips, raw_data = get_venues_tips(row['venues.venue_id'])
     except Exception as inst:
-        tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
         print(inst)
-        return
+        if inst == "invalid_auth":
+            tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
+            raise inst
+        elif inst == "param_error":
+            tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
+            raise inst
+        elif inst == "endpoint_error":
+            tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
+            raise inst
+        elif inst == "deprecated":
+            tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
+            raise inst
+        elif inst == "not_authorized":
+            tips_requests_table.update_status(row['venues.id'], ERROR_STATUS)
+            return
+        elif inst == "other":
+            tips_requests_table.update_status(row['venues.id'], ERROR_STATUS)
+            return
+        elif inst == "rate_limit_exceeded":
+            tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
+            sleep(30 * 60)  # 30分クールタイム
+            return
+        elif inst == "quota_exceeded":
+            tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
+            sleep(30 * 60)  # 30分クールタイム
+            return
+        elif inst == "server_error":
+            tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
+            sleep(30 * 60)  # 30分クールタイム
+            return
 
     # venue情報の取得ができたので、取得完了(2)にステータスを更新する
     tips_requests_table.update_status(row['venues.id'], 2)
