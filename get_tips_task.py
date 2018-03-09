@@ -15,7 +15,7 @@ ERROR_STATUS = 3
 
 def fetch(row):
     # 取得してくる前にステータスを取得中(1)に変更
-    tips_requests_table.update_status(row['venues.id'], 1)
+    tips_requests_table.update_status(row['venues.id'], RUNNNING_STATUS)
     tips_requests_table.commit()
     venue_ids = None
     # エラーが返ってきた場合、このlocation情報のrequestsテーブルのステータスをエラー(3)にする
@@ -55,7 +55,7 @@ def fetch(row):
             return
 
     # venue情報の取得ができたので、取得完了(2)にステータスを更新する
-    tips_requests_table.update_status(row['venues.id'], 2)
+    tips_requests_table.update_status(row['venues.id'], DONE_STATUS)
 
     # tipsの個数が0であった場合終了
     if tips == row['tip_count']:
@@ -70,7 +70,7 @@ def fetch(row):
                               raw_data=json.dumps(data, sort_keys=True, ensure_ascii=False)
                              )
         except Exception as inst:
-            tips_requests_table.update_status(row['venues.id'], 3)
+            tips_requests_table.update_status(row['venues.id'], ERROR_STATUS)
             return
     return
 
