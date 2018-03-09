@@ -23,33 +23,33 @@ def fetch(row):
         tips, raw_data = get_venues_tips(row['venues.venue_id'])
     except Exception as inst:
         print(inst)
-        if inst == "invalid_auth":
+        if str(inst) == "invalid_auth":
             tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
             raise inst
-        elif inst == "param_error":
+        elif str(inst) == "param_error":
             tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
             raise inst
-        elif inst == "endpoint_error":
+        elif str(inst) == "endpoint_error":
             tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
             raise inst
-        elif inst == "deprecated":
+        elif str(inst) == "deprecated":
             tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
             raise inst
-        elif inst == "not_authorized":
+        elif str(inst) == "not_authorized":
             tips_requests_table.update_status(row['venues.id'], ERROR_STATUS)
             return
-        elif inst == "other":
+        elif str(inst) == "other":
             tips_requests_table.update_status(row['venues.id'], ERROR_STATUS)
             return
-        elif inst == "rate_limit_exceeded":
+        elif str(inst) == "rate_limit_exceeded":
             tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
             sleep(30 * 60)  # 30分クールタイム
             return
-        elif inst == "quota_exceeded":
+        elif str(inst) == "quota_exceeded":
             tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
             sleep(30 * 60)  # 30分クールタイム
             return
-        elif inst == "server_error":
+        elif str(inst) == "server_error":
             tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
             sleep(30 * 60)  # 30分クールタイム
             return
