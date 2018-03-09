@@ -53,6 +53,9 @@ def fetch(row):
             tips_requests_table.update_status(row['venues.id'], WAIT_STATUS)
             sleep(30 * 60)  # 30分クールタイム
             return
+        else:
+            tips_requests_table.update_status(row['venues.id'], ERROR_STATUS)
+            return
 
     # venue情報の取得ができたので、取得完了(2)にステータスを更新する
     tips_requests_table.update_status(row['venues.id'], DONE_STATUS)
