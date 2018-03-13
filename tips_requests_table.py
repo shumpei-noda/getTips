@@ -38,7 +38,7 @@ def get_waiting_tasks():
     return rows
 
 def get_waiting_task():
-    row = db.table('tips_requests').where('status', '=', '0').join('venues', 'tips_requests.venue_id', '=', 'venues.id').lock_for_update().first()
+    row = db.table('tips_requests').where('status', '=', '0').join('venues', 'tips_requests.venue_id', '=', 'venues.id').where('tip_count', '!=', '0').lock_for_update().first()
     return row
 
 def update_status(venue_id, status_code):
