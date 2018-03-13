@@ -1,3 +1,4 @@
+import json
 import datetime
 
 from orator import DatabaseManager
@@ -37,3 +38,8 @@ def get():
 
 def get_tip_count_null():
     return db.table('venues').where_null('tip_count').get()
+
+def update_tip_count():
+    rows = get_tip_count_null()
+    for row in rows:
+        db.table('venues').where('id', row['id']).update(tip_count=json.loads(row['raw_data'])['stats']['tipCount'])
