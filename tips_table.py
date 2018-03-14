@@ -18,9 +18,10 @@ db = DatabaseManager(config)
 
 table_name = 'tips2'
 
-def insert(venue_id, tip, raw_data):
+def insert(venue_id, tip, lang, raw_data):
     db.table(table_name).insert({'venue_id': venue_id,
                              'tip': tip,
+                             'lang': lang,
                              'raw_data': raw_data,
                              'created_at': datetime.datetime.today(),
                              'updated_at': datetime.datetime.today()
