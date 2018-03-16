@@ -70,7 +70,7 @@ def fetch(row):
         try:
             tips_table.insert(venue_id=row['venues.id'],
                               tip=data['text'],
-                              lang=data['lang']
+                              lang=data['lang'],
                               raw_data=json.dumps(data, sort_keys=True, ensure_ascii=False)
                              )
         except Exception as inst:
